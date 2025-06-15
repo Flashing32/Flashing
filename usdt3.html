@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>USDT Fee Payment</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff;
+    }
+    .box {
+      display: inline-block;
+      background: rgba(0, 255, 0, 0.05);
+      border: 1px solid #0f0;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 20px #0f0;
+      margin-top: 20px;
+      max-width: 450px;
+    }
+    .label {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #0f0;
+    }
+    .value {
+      font-size: 20px;
+      color: #0ff;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .warning {
+      color: red;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 16px;
+      text-shadow: 0 0 5px red;
+    }
+    .timer {
+      font-size: 24px;
+      margin-top: 15px;
+      color: yellow;
+      text-shadow: 0 0 10px yellow;
+    }
+
+    .address-box {
+      background: #111;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px dashed #0f0;
+      border-radius: 5px;
+      word-break: break-all;
+      position: relative;
+    }
+
+    .copy-btn {
+      background: #0f0;
+      color: #000;
+      border: none;
+      padding: 6px 12px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .copied {
+      color: #0f0;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    /* Popup every 3 sec */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      border: 2px solid red;
+      color: red;
+      padding: 20px 40px;
+      font-size: 18px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px red;
+      text-align: center;
+      z-index: 9999;
+      display: none;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px red; }
+      to { box-shadow: 0 0 25px red, 0 0 50px red; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Pay Network Fee</h1>
+  <div class="box">
+    <div class="label">Entered Flash Amount:</div>
+    <div class="value" id="amount">Loading...</div>
+
+    <div class="label">Your fee :</div>
+    <div class="value" id="fee">Calculating...</div>
+
+    <div class="label">Send Fee to This USDT Address:BEP20</div>
+    <div class="address-box" id="usdtAddress">0x0f9a863614287da330c9cce80e50df5c91981669</div>
+    <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+    <div class="copied" id="copyMsg"> Address Copied!</div>
+
+    <div class="timer" id="countdown">10:00</div>
+
+    <div class="warning">You must pay the fee within 10 minutes.<br>After paying the fee, Flash $ will be transferred to your address within 5 minutes</div>
+  </div>
+
+  <div class="popup" id="popup">Waiting for Fee..</div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const amount = parseFloat(params.get("amount"));
+
+    document.getElementById("amount").textContent = isNaN(amount) ? "Invalid" : "$" + amount.toLocaleString();
+
+    if (!isNaN(amount)) {
+      const fee = (amount * 0.006).toFixed(2);
+      document.getElementById("fee").textContent = "$" + parseFloat(fee).toLocaleString();
+    }
+
+    // Countdown
+    let timeLeft = 600;
+    const timer = setInterval(() => {
+      const min = Math.floor(timeLeft / 60);
+      const sec = timeLeft % 60;
+      document.getElementById("countdown").textContent =
+        `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+      timeLeft--;
+
+      if (timeLeft < 0) {
+        clearInterval(timer);
+        window.location.href = "index.html";
+      }
+    }, 1000);
+
+    // Copy
+    function copyAddress() {
+      const address = document.getElementById("usdtAddress").textContent;
+      navigator.clipboard.writeText(address).then(() => {
+        document.getElementById("copyMsg").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("copyMsg").style.display = "none";
+        }, 3000);
+      });
+    }
+
+    // Popup every 3 seconds
+    setInterval(() => {
+      const popup = document.getElementById("popup");
+      popup.style.display = "block";
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 1000); // show popup for 1 sec
+    }, 3000); // every 3 seconds
+  </script>
+</body>
+</html>

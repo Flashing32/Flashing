@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BNB Flashing - Enter Details</title>
+  <style>
+    body {
+      background: #000;
+      font-family: monospace;
+      text-align: center;
+      color: #f3ba2f;
+      padding: 20px;
+    }
+    .box {
+      background: #111;
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid #f3ba2f;
+      box-shadow: 0 0 20px #f3ba2f;
+      max-width: 450px;
+      margin: 50px auto;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: #f3ba2f;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      background: #f3ba2f;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #f3ba2f;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      border: 2px solid red;
+      padding: 20px 30px;
+      color: red;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px red;
+      display: none;
+      z-index: 999;
+      animation: fadeInOut 3s ease-in-out;
+    }
+
+    @keyframes fadeInOut {
+      0% {opacity: 0;}
+      10% {opacity: 1;}
+      90% {opacity: 1;}
+      100% {opacity: 0;}
+    }
+  </style>
+</head>
+<body>
+
+  <h1>BNB Flashing Details</h1>
+  <div class="box">
+    <input type="number" id="amount" placeholder="Enter Flash Amount" />
+    <input type="text" id="bnbAddress" placeholder="Enter Your BNB Address" />
+    <button onclick="proceed()">Proceed</button>
+  </div>
+
+  <div class="popup" id="popup"></div>
+  <audio id="beep" src="https://www.soundjay.com/buttons/sounds/beep-07.mp3" preload="auto"></audio>
+
+  <script>
+    function showPopup(msg) {
+      const popup = document.getElementById("popup");
+      const beep = document.getElementById("beep");
+      popup.innerText = msg;
+      popup.style.display = "block";
+      beep.play();
+      setTimeout(() => popup.style.display = "none", 3000);
+    }
+
+    function proceed() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const address = document.getElementById("bnbAddress").value.trim();
+
+      if (isNaN(amount) || amount < 100 || amount > 600) {
+        showPopup("Amount must be between 100 to 600");
+        return;
+      }
+
+      if (!address || address.length < 10) {
+        showPopup("Please enter a valid BNB address");
+        return;
+      }
+
+      const url = `bnb3.html?amount=${amount}&address=${encodeURIComponent(address)}`;
+      window.location.href = url;
+    }
+  </script>
+
+</body>
+</html>

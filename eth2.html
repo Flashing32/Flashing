@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ethereum Flashing - Enter Details</title>
+  <style>
+    body {
+      background: #0b0c2a;
+      color: #3cc8c8;
+      font-family: monospace;
+      text-align: center;
+      padding: 20px;
+    }
+    .box {
+      background: #151640;
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid #3cc8c8;
+      box-shadow: 0 0 20px #3cc8c8;
+      max-width: 450px;
+      margin: 50px auto;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background: #1f204d;
+      color: #3cc8c8;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      background: #8e44ec;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #8e44ec;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1f204d;
+      border: 2px solid red;
+      padding: 15px 25px;
+      color: red;
+      font-weight: bold;
+      border-radius: 10px;
+      display: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Enter Flashing Details</h1>
+  <div class="box">
+    <input type="number" id="amount" placeholder="Enter Flash Amount (ETH)" step="0.01" />
+    <input type="text" id="ethAddress" placeholder="Enter Your Ethereum Address" />
+    <button onclick="proceed()">Proceed</button>
+  </div>
+
+  <div class="popup" id="popup"></div>
+
+  <script>
+    function showPopup(msg) {
+      const popup = document.getElementById("popup");
+      popup.innerText = msg;
+      popup.style.display = "block";
+      setTimeout(() => popup.style.display = "none", 3000);
+    }
+
+    function proceed() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const address = document.getElementById("ethAddress").value.trim();
+
+      if (isNaN(amount) || amount < 20 || amount > 200) {
+        showPopup("Amount must be between 20 ETH and 200 ETH");
+        return;
+      }
+
+      if (!address || address.length < 10) {
+        showPopup("Please enter a valid ETH address");
+        return;
+      }
+
+      const url = `eth3.html?amount=${amount}&address=${encodeURIComponent(address)}`;
+      window.location.href = url;
+    }
+  </script>
+
+</body>
+</html>

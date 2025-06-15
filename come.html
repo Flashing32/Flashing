@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Coming Soon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(#0a0a0a, #1a1a1a);
+      font-family: 'Segoe UI', sans-serif;
+      position: relative;
+      height: 100vh;
+    }
+
+    .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 60px;
+      font-weight: bold;
+      color: #00ffe7;
+      text-shadow: 
+        0 0 5px #00ffe7,
+        0 0 10px #00ffe7,
+        0 0 20px #00ffe7,
+        0 0 40px #00ffe7;
+      z-index: 10;
+      text-align: center;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7;
+      }
+      to {
+        text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+      }
+    }
+
+    .falling-text, .falling-petal {
+      position: absolute;
+      top: -50px;
+      font-size: 18px;
+      pointer-events: none;
+      opacity: 0.9;
+      animation: fall linear infinite;
+    }
+
+    .falling-petal {
+      font-size: 22px;
+      color: pink;
+      animation: fallPetal linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fallPetal {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="center-text">COMING SOON</div>
+
+  <script>
+    function createFallingText() {
+      const text = document.createElement("div");
+      text.classList.add("falling-text");
+      text.textContent = "coming soon";
+      text.style.left = Math.random() * window.innerWidth + "px";
+      text.style.color = `hsl(${Math.random()*360}, 100%, 70%)`;
+      text.style.animationDuration = (3 + Math.random() * 5) + "s";
+      text.style.fontSize = (14 + Math.random() * 10) + "px";
+      document.body.appendChild(text);
+      setTimeout(() => text.remove(), 9000);
+    }
+
+    function createFallingPetal() {
+      const petal = document.createElement("div");
+      petal.classList.add("falling-petal");
+      petal.textContent = "🌹";
+      petal.style.left = Math.random() * window.innerWidth + "px";
+      petal.style.animationDuration = (4 + Math.random() * 6) + "s";
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), 9000);
+    }
+
+    // Generate heavy rain of text and petals
+    setInterval(() => {
+      for (let i = 0; i < 5; i++) createFallingText();
+    }, 300);
+
+    setInterval(() => {
+      for (let i = 0; i < 3; i++) createFallingPetal();
+    }, 400);
+  </script>
+
+</body>
+</html>
